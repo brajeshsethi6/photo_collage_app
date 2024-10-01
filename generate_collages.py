@@ -80,8 +80,19 @@ def create_collage(images, filenames, folder_name, usable_width, usable_height, 
 
     for i, (img, filename) in enumerate(zip(images, filenames)):
         img = img.resize(image_size)
+        
+        # Calculate x and y for regular images
         x = page_margin + (i % cols) * (image_size[0] + photo_margin)
         y = page_margin + header_height + (i // cols) * (image_size[1] + photo_margin + text_height)
+
+        # Check if it's the last row and there's an odd number of images in this row
+        is_last_row = i // cols == rows - 1
+        remaining_images_in_last_row = num_images % cols
+
+        if is_last_row and remaining_images_in_last_row != 0 and i >= (num_images - remaining_images_in_last_row):
+            # Center the last image in the last row
+            row_width = remaining_images_in_last_row * (image_size[0] + photo_margin) - photo_margin
+            x = (collage_width - row_width) // 2 + (i % cols) * (image_size[0] + photo_margin)
 
         collage.paste(img, (x, y))
 
